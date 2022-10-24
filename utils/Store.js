@@ -20,9 +20,14 @@ function reducer(state = initialState, action) {
       : [...state.cart.cartItems, newItem];
 
     return { ...state, cart: { ...state.cart, cartItems } };
+  } else if (action.type === "CART_REMOVE_ITEM") {
+    const cartItems = state.cart.cartItems.filter((item) => {
+      return item.slug !== action.payload.slug;
+    });
+    return { ...state, cart: { ...state.cart, cartItems } };
+  } else {
+    return state;
   }
-
-  return state;
 }
 
 export function StoreProvider({ children }) {
