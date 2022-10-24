@@ -1,4 +1,5 @@
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -6,34 +7,25 @@ import React, { useContext } from "react";
 import Layout from "../components/Layout";
 import { Store } from "../utils/Store";
 
-export default function CartScreen() {
+function CartScreen() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
-
   const removeItemHandler = (item) => {
-    dispatch({
-      type: "CART_REMOVE_ITEM",
-      payload: item,
-    });
+    dispatch({ type: "CART_REMOVE_ITEM", payload: item });
   };
-
   const updateCartHandler = (item, qty) => {
     const quantity = Number(qty);
-    dispatch({
-      type: "CART_ADD_ITEM",
-      payload: { ...item, quantity },
-    });
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
   };
-
   return (
     <Layout title="Shopping Cart">
       <h1 className="mb-4 text-xl">Shopping Cart</h1>
       {cartItems.length === 0 ? (
         <div>
-          Cart is empty. <Link href={"/"}>Go Shopping</Link>
+          Cart is empty. <Link href="/">Go shopping</Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5">
@@ -93,16 +85,15 @@ export default function CartScreen() {
             <ul>
               <li>
                 <div className="pb-3 text-xl">
-                  Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}) : ${" "}
+                  Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}) : $
                   {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                 </div>
               </li>
               <li>
                 <button
-                  onClick={() => router.push("/shipping")}
+                  onClick={() => router.push("login?redirect=/shipping")}
                   className="primary-button w-full"
                 >
-                  {" "}
                   Check Out
                 </button>
               </li>
@@ -113,3 +104,5 @@ export default function CartScreen() {
     </Layout>
   );
 }
+
+export default dynamic(() => Promise.resolve(CartScreen), { ssr: false });
