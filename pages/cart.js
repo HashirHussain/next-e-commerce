@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import Layout from "../components/Layout";
 import { Store } from "../utils/Store";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function CartScreen() {
   const router = useRouter();
@@ -16,9 +18,16 @@ function CartScreen() {
   const removeItemHandler = (item) => {
     dispatch({ type: "CART_REMOVE_ITEM", payload: item });
   };
-  const updateCartHandler = (item, qty) => {
+  const updateCartHandler = async (item, qty) => {
     const quantity = Number(qty);
+    const { data } = await axios.get(`/api/products/${item._id}`);
+
+    if (data.countInStock < quantity) {
+      return toast.error("Sorry, product out of stock");
+    }
+
     dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
+    return toast.success("Product updated in the cart");
   };
   return (
     <Layout title="Shopping Cart">
