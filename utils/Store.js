@@ -30,6 +30,17 @@ function reducer(state, action) {
     });
     Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems }));
     return { ...state, cart: { ...state.cart, cartItems } };
+  } else if (action.type === "SAVE_SHIPPING_ADDRESS") {
+    return {
+      ...state,
+      cart: {
+        ...state.cart,
+        shippingAddress: {
+          ...state.shippingAddress,
+          ...action.payload,
+        },
+      },
+    };
   } else if (action.type === "CART_RESET") {
     return {
       ...state,
