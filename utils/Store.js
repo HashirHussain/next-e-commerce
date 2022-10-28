@@ -41,6 +41,14 @@ function reducer(state, action) {
         },
       },
     };
+  } else if (action.type === "SAVE_PAYMENT_METHOD") {
+    return {
+      ...state,
+      cart: {
+        ...state.cart,
+        paymentMethod: action.payload,
+      },
+    };
   } else if (action.type === "CART_RESET") {
     return {
       ...state,
