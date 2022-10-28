@@ -6,7 +6,7 @@ export const Store = createContext();
 const initialState = {
   cart: Cookies.get("cart")
     ? JSON.parse(Cookies.get("cart"))
-    : { cartItems: [] },
+    : { cartItems: [], shippingAddress: { location: {} }, paymentMethod: "" },
 };
 
 function reducer(state, action) {
@@ -30,6 +30,15 @@ function reducer(state, action) {
     });
     Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems }));
     return { ...state, cart: { ...state.cart, cartItems } };
+  } else if (action.type === "CART_RESET") {
+    return {
+      ...state,
+      cart: {
+        cartItems: [],
+        shippingAddress: { location: {} },
+        paymentMethod: "",
+      },
+    };
   } else {
     return state;
   }
